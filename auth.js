@@ -11,14 +11,28 @@ signupBtn.addEventListener('click', async () => {
     const fullName = document.getElementById('signup-name').value;
     const role = document.getElementById('signup-role').value;
 
+    if(!email || !password) return alert("Please fill in all fields");
+
     const { data, error } = await supabaseClient.auth.signUp({
         email,
         password,
         options: { data: { full_name: fullName, role: role } }
     });
 
-    if (error) alert(error.message);
-    else alert('Success! You can now sign in.');
+    if (error) {
+        alert(error.message);
+    } else {
+        alert('Registration Successful! Please check your email for a confirmation link (or try logging in if you disabled confirmation).');
+        
+        // Clear the signup fields
+        document.getElementById('signup-email').value = '';
+        document.getElementById('signup-password').value = '';
+        document.getElementById('signup-name').value = '';
+        
+        // Automatically switch back to login section
+        document.getElementById('signup-section').style.display = 'none';
+        document.getElementById('login-section').style.display = 'block';
+    }
 });
 
 loginBtn.addEventListener('click', async () => {
