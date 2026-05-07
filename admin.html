@@ -1,0 +1,49 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Command Center</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <nav>
+        <h2>Admin Dashboard</h2>
+        <button class="btn" onclick="handleLogout()">Logout</button>
+    </nav>
+
+    <div class="container">
+        <div class="stats-bar">
+            <div class="stat-card">
+                <h3 id="totalVendors">0</h3>
+                <p>Active Vendors</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="totalOrders">0</h3>
+                <p>Total Orders</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="totalRevenue">$0</h3>
+                <p>Platform Revenue</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Inventory Oversight</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Vendor ID</th>
+                        <th>Price</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="adminProductList"></tbody>
+            </table>
+        </div>
+    </div>
+    <script src="admin.js"></script>
+</body>
+</html>
