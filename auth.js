@@ -1,6 +1,6 @@
 const SUPABASE_URL = 'https://bsnmcvntzvywhkpjsvsi.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_3Q2CdkwYf8MT8DV8dzdKww_pDZ9HlFU';
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJzbm1jdm50enZ5d2hrcGpzdnNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgxNDc5MzcsImV4cCI6MjA5MzcyMzkzN30.OsHDloa5J7UcbDwP4n8TXFhIkTnAn7INwsR-_ld-ZQ0';
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const loginBtn = document.getElementById('login-btn');
 const signupBtn = document.getElementById('signup-btn');
@@ -11,7 +11,7 @@ signupBtn.addEventListener('click', async () => {
     const fullName = document.getElementById('signup-name').value;
     const role = document.getElementById('signup-role').value;
 
-    const { data, error } = await supabase.auth.signUp({
+    const { data, error } = await supabaseClient.auth.signUp({
         email,
         password,
         options: { data: { full_name: fullName, role: role } }
@@ -25,7 +25,7 @@ loginBtn.addEventListener('click', async () => {
     const email = document.getElementById('login-email').value;
     const password = document.getElementById('login-password').value;
 
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
 
     if (error) {
         alert(error.message);

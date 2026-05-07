@@ -1,10 +1,10 @@
 const SUPABASE_URL = 'https://bsnmcvntzvywhkpjsvsi.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_3Q2CdkwYf8MT8DV8dzdKww_pDZ9HlFU';
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJzbm1jdm50enZ5d2hrcGpzdnNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgxNDc5MzcsImV4cCI6MjA5MzcyMzkzN30.OsHDloa5J7UcbDwP4n8TXFhIkTnAn7INwsR-_ld-ZQ0';
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 async function loadProducts() {
     const category = document.getElementById('filterCat').value;
-    let query = supabase.from('products').select('*');
+    let query = supabaseClient.from('products').select('*');
     
     if (category !== 'all') query = query.eq('category', category);
 
