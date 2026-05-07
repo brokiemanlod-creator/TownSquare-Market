@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TownSquare Market - Login</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <div class="auth-container">
+        <h1>TownSquare Market</h1>
+        
+        <div id="login-section">
+            <h2>Login</h2>
+            <input type="email" id="login-email" placeholder="Email">
+            <input type="password" id="login-password" placeholder="Password">
+            <button id="login-btn">Sign In</button>
+            <p>Need an account? <a href="#" id="show-signup">Sign Up</a></p>
+        </div>
+
+        <div id="signup-section" style="display: none;">
+            <h2>Create Account</h2>
+            <input type="text" id="signup-name" placeholder="Full Name">
+            <input type="email" id="signup-email" placeholder="Email">
+            <input type="password" id="signup-password" placeholder="Password">
+            <select id="signup-role">
+                <option value="customer">Customer</option>
+                <option value="vendor">Vendor</option>
+            </select>
+            <button id="signup-btn">Register</button>
+            <p>Already have an account? <a href="#" id="show-login">Login</a></p>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+</body>
+</html>
