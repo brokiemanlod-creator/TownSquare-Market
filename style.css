@@ -1,151 +1,113 @@
 :root {
-    --primary: #6366f1;
-    --primary-hover: #4f46e5;
-    --bg: #f8fafc;
-    --card: #ffffff;
-    --text: #1e293b;
-    --border: #e2e8f0;
-    --danger: #ef4444;
-    --success: #22c55e;
+    --bg: #fdfdfd;
+    --surface: #ffffff;
+    --primary: #18181b;
+    --accent: #4f46e5;
+    --text: #18181b;
+    --text-light: #71717a;
+    --border: #e4e4e7;
 }
 
 body {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
     background-color: var(--bg);
     color: var(--text);
     margin: 0;
+    -webkit-font-smoothing: antialiased;
 }
 
-nav {
+.auth-wrapper {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    padding: 1rem 5%;
-    background: var(--card);
-    border-bottom: 1px solid var(--border);
+    min-height: 100vh;
 }
 
-.container {
-    max-width: 1200px;
-    margin: 2rem auto;
-    padding: 0 1rem;
+.auth-card {
+    width: 100%;
+    max-width: 400px;
+    padding: 2.5rem;
+    background: var(--surface);
 }
 
-.grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1.5rem;
-}
-
-.card {
-    background: var(--card);
-    padding: 1.5rem;
-    border-radius: 12px;
-    border: 1px solid var(--border);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-}
-
-.form-group {
-    margin-bottom: 1.25rem;
-}
-
-label {
-    display: block;
-    font-size: 0.875rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
+.logo {
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.05em;
+    margin-bottom: 2rem;
+    text-align: center;
 }
 
 input, select {
     width: 100%;
-    padding: 0.625rem;
+    padding: 0.8rem;
+    margin-bottom: 1rem;
     border: 1px solid var(--border);
-    border-radius: 6px;
+    border-radius: 4px;
     box-sizing: border-box;
 }
 
 .btn {
-    padding: 0.625rem 1.25rem;
-    border-radius: 6px;
+    width: 100%;
+    padding: 0.8rem;
     border: none;
+    border-radius: 4px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s;
 }
 
-.btn-primary { background: var(--primary); color: white; }
-.btn-primary:hover { background: var(--primary-hover); }
-.btn-danger { background: var(--danger); color: white; }
-
-.stats-bar {
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 2rem;
-}
-
-.stat-card {
-    flex: 1;
+.btn-primary {
     background: var(--primary);
     color: white;
-    padding: 1.5rem;
-    border-radius: 12px;
+}
+
+.btn-primary:hover {
+    opacity: 0.9;
+}
+
+.toggle-text {
     text-align: center;
+    font-size: 0.9rem;
+    color: var(--text-light);
+    margin-top: 1.5rem;
 }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-    background: white;
-    border-radius: 12px;
-    overflow: hidden;
+.toggle-text a {
+    color: var(--accent);
+    text-decoration: none;
 }
 
-th, td {
-    padding: 1rem;
-    text-align: left;
-    border-bottom: 1px solid var(--border);
-}
-
-.hidden { display: none; }
-
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f4f7f6;
+nav {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
+    justify-content: space-between;
+    padding: 1.5rem 5%;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
 }
 
-.auth-container {
-    background: white;
-    padding: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+.container {
+    max-width: 1000px;
+    margin: 3rem auto;
+    padding: 0 1rem;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2rem;
+}
+
+.card {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem;
+    background: var(--surface);
+}
+
+.product-img {
     width: 100%;
-    max-width: 400px;
-    text-align: center;
-}
-
-input, select, button {
-    width: 100%;
-    padding: 12px;
-    margin: 10px 0;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    box-sizing: border-box;
-}
-
-button {
-    background-color: #2ecc71;
-    color: white;
-    border: none;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background 0.3s;
-}
-
-button:hover {
-    background-color: #27ae60;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 4px;
 }

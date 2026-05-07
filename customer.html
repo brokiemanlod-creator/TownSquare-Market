@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Marketplace</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <nav>
+        <div class="logo">TownSquare</div>
+        <button class="btn" style="width: auto" onclick="supabase.auth.signOut().then(() => window.location.href='index.html')">Logout</button>
+    </nav>
+
+    <div class="container">
+        <header style="margin-bottom: 2rem;">
+            <select id="filterCat" onchange="loadProducts()" style="max-width: 200px;">
+                <option value="all">All Categories</option>
+                <option value="Grocery">Grocery</option>
+                <option value="Electronics">Electronics</option>
+                <option value="Boutique">Boutique</option>
+            </select>
+        </header>
+        <div id="productGrid" class="grid"></div>
+    </div>
+    <script src="customer.js"></script>
+</body>
+</html>
