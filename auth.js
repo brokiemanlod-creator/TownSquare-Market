@@ -12,31 +12,23 @@ signupBtn.addEventListener('click', async () => {
     const fullName = document.getElementById('signup-name').value;
     const role = document.getElementById('signup-role').value;
 
-    if (!email || !password || !fullName) {
-        alert("Please fill in all fields.");
-        return;
-    }
+    if (!email || !password) return alert("Email and Password are required!");
 
     const { data, error } = await supabaseClient.auth.signUp({
         email,
         password,
-        options: {
-            data: {
-                full_name: fullName,
-                role: role
-            }
-        }
+        options: { data: { full_name: fullName, role: role } }
     });
 
     if (error) {
-        alert("Error: " + error.message);
+        alert("Registration Error: " + error.message);
     } else {
-        alert("Success! Account created. If you haven't disabled 'Confirm Email' in Supabase, please check your inbox before logging in.");
+        alert("Account Created Successfully!");
         
-        document.getElementById('signup-email').value = '';
-        document.getElementById('signup-password').value = '';
-        document.getElementById('signup-name').value = '';
+        // Clear all inputs
+        document.querySelectorAll('#signup-section input').forEach(input => input.value = '');
         
+        // Jump back to login
         document.getElementById('signup-section').style.display = 'none';
         document.getElementById('login-section').style.display = 'block';
     }
@@ -46,28 +38,15 @@ loginBtn.addEventListener('click', async () => {
     const email = document.getElementById('login-email').value;
     const password = document.getElementById('login-password').value;
 
-    if (!email || !password) {
-        alert("Please enter both email and password.");
-        return;
-    }
-
-    const { data, error } = await supabaseClient.auth.signInWithPassword({
-        email,
-        password
-    });
+    const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
 
     if (error) {
-        alert("Login failed: " + error.message);
+        alert(error.message);
     } else {
         const userRole = data.user.user_metadata.role;
-        
-        if (userRole === 'admin') {
-            window.location.href = 'admin.html';
-        } else if (userRole === 'vendor') {
-            window.location.href = 'vendor.html';
-        } else {
-            window.location.href = 'customer.html';
-        }
+        if (userRole === 'admin') window.location.href = 'admin.html';
+        else if (userRole === 'vendor') window.location.href = 'vendor.html';
+        else window.location.href = 'customer.html';
     }
 });
 
