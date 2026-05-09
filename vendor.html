@@ -1,0 +1,46 @@
+const SUPABASE_URL = 'https://bsnmcvntzvywhkpjsvsi.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJzbm1jdm50enZ5d2hrcGpzdnNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgxNDc5MzcsImV4cCI6MjA5MzcyMzkzN30.OsHDloa5J7UcbDwP4n8TXFhIkTnAn7INwsR-_ld-ZQ0';
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+async function loadOrders() {
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    const { data: items } = await supabaseClient.from('order_items').select('*, orders(*), products(*)').eq('vendor_id', user.id);
+    
+    const container = document.getElementById('vendorOrders');
+    container.innerHTML = items.map(i => `
+        <div class="card">
+            <p>Product: ${i.products.name}</p>
+            <p>Status: ${i.orders.status}</p>
+            ${i.orders.status === 'to-pay' ? `<button onclick="updateStatus('${i.orders.id}','to-ship')">Accept</button>` : ''}
+            ${i.orders.status === 'to-ship' ? `<button onclick="updateStatus('${i.orders.id}','to-receive')">Ship Item</button>` : ''}
+            ${i.orders.status === 'to-receive' ? `<button onclick="updateStatus('${i.orders.id}','completed')">Delivered</button>` : ''}
+        </div>
+    `).join('');
+}
+
+async function updateStatus(oid, status) {
+    await supabaseClient.from('orders').update({ status }).eq('id', oid);
+    loadOrders();
+}
+
+async function loadReviews() {
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    const { data: reviews } = await supabaseClient.from('reviews').select('*, profiles(store_name), products(name)').eq('vendor_id', user.id);
+    
+    document.getElementById('reviewSection').innerHTML = reviews.map(r => `
+        <div class="card">
+            <p><b>${r.products.name}</b>: ${r.rating} Stars</p>
+            <p>"${r.comment}"</p>
+            <textarea id="reply-${r.id}" placeholder="Reply...">${r.vendor_reply || ''}</textarea>
+            <button onclick="submitReply('${r.id}')">Send Reply</button>
+        </div>
+    `).join('');
+}
+
+async function submitReply(rid) {
+    const text = document.getElementById(`reply-${rid}`).value;
+    await supabaseClient.from('reviews').update({ vendor_reply: text }).eq('id', rid);
+    alert("Replied!");
+}
+
+loadOrders(); loadReviews();

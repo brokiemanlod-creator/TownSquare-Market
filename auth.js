@@ -12,23 +12,31 @@ signupBtn.addEventListener('click', async () => {
     const fullName = document.getElementById('signup-name').value;
     const role = document.getElementById('signup-role').value;
 
-    if (!email || !password) return alert("Email and Password are required!");
+    if (!email || !password || !fullName) {
+        alert("Please fill in all fields.");
+        return;
+    }
 
     const { data, error } = await supabaseClient.auth.signUp({
         email,
         password,
-        options: { data: { full_name: fullName, role: role } }
+        options: {
+            data: {
+                full_name: fullName,
+                role: role
+            }
+        }
     });
 
     if (error) {
-        alert("Registration Error: " + error.message);
+        alert("Error: " + error.message);
     } else {
-        alert("Account Created Successfully!");
+        alert("Success! Account created. If you haven't disabled 'Confirm Email' in Supabase, please check your inbox before logging in.");
         
-        // Clear all inputs
-        document.querySelectorAll('#signup-section input').forEach(input => input.value = '');
+        document.getElementById('signup-email').value = '';
+        document.getElementById('signup-password').value = '';
+        document.getElementById('signup-name').value = '';
         
-        // Jump back to login
         document.getElementById('signup-section').style.display = 'none';
         document.getElementById('login-section').style.display = 'block';
     }
@@ -44,9 +52,13 @@ loginBtn.addEventListener('click', async () => {
         alert(error.message);
     } else {
         const userRole = data.user.user_metadata.role;
-        if (userRole === 'admin') window.location.href = 'admin.html';
-        else if (userRole === 'vendor') window.location.href = 'vendor.html';
-        else window.location.href = 'customer.html';
+        const routes = {
+            'admin': 'admin.html',
+            'vendor': 'vendor.html',
+            'rider': 'rider.html', // New role
+            'customer': 'customer.html'
+        };
+        window.location.href = routes[userRole] || 'customer.html';
     }
 });
 
