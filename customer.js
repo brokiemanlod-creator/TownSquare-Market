@@ -4,6 +4,7 @@ const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let cart = JSON.parse(localStorage.getItem('townsquare_cart')) || [];
 let selectedItems = [];
+let cartSelectedIds = [];
 let map, marker;
 let pendingCancelOrderId = null;
 let pendingDeleteOrderId = null;
@@ -13,6 +14,7 @@ function showQuantityModal(productId, productName, productPrice, vendorId, image
     pendingProduct = { id: productId, name: productName, price: parseFloat(productPrice), vendorId, image_url: imageUrl };
     document.getElementById('qtyProductName').innerText = productName;
     document.getElementById('qtyProductPrice').innerText = `$${productPrice}`;
+    document.getElementById('qtyProductImage').src = imageUrl;
     document.getElementById('qtyInput').value = '1';
     document.getElementById('quantityModal').style.display = 'flex';
 }
@@ -159,7 +161,7 @@ async function confirmDeleteOrder() {
     } else {
         showNotify("Order deleted successfully", "success");
         closeModal('deleteOrderModal');
-        loadMyOrders('to-pay');
+        loadMyOrders('cancelled');
     }
     pendingDeleteOrderId = null;
 }
@@ -194,19 +196,33 @@ function updateCartUI() {
 }
 
 function showCartItems() {
+    cartSelectedIds = cartSelectedIds.filter(id => cart.some(item => item.id === id));
+    updateCartSelectionDisplay();
     const list = document.getElementById('cartItemsList');
     if (cart.length === 0) {
         list.innerHTML = '<p style="text-align: center; color: #9ca3af; padding: 2rem;">Your cart is empty</p>';
     } else {
         list.innerHTML = cart.map(item => `
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; padding-bottom:1rem; border-bottom:1px solid #e5e7eb;">
-                <div style="flex: 1;">
-                    <div style="font-weight: 600; color: #1f2937;">${item.name}</div>
-                    <div style="font-size: 0.85rem; color: #9ca3af;">Qty: ${item.qty}</div>
+            <div style="display:flex; justify-content:space-between; align-items:center; gap: 1rem; margin-bottom:1.5rem; padding-bottom:1rem; border-bottom:1px solid #e5e7eb;">
+                <div style="display:flex; align-items:center; gap: 1rem; flex: 1; min-width: 0;">
+                    <input type="checkbox" onchange="toggleCartItemSelection('${item.id}', this.checked)" ${cartSelectedIds.includes(item.id) ? 'checked' : ''} style="width: 18px; height: 18px; cursor: pointer; accent-color: #065f46;">
+                    <img src="${item.image_url}" alt="${item.name}" style="width: 92px; height: 92px; object-fit: cover; border-radius: 14px; background: #f3f4f6; flex-shrink: 0;">
+                    <div style="min-width: 0; flex: 1;">
+                        <div style="font-weight: 700; color: #1f2937; font-size: 1rem; margin-bottom: 0.35rem; white-space: normal; overflow: hidden; text-overflow: ellipsis;">${item.name}</div>
+                        <div style="font-size: 0.9rem; color: #6b7280;">Price: $${item.price.toFixed(2)}</div>
+                        <div style="font-size: 0.9rem; color: #9ca3af;">Qty: ${item.qty}</div>
+                    </div>
                 </div>
-                <div style="text-align: right;">
-                    <div style="font-weight: 700; color: #065f46; margin-bottom: 0.5rem;">$${(item.price * item.qty).toFixed(2)}</div>
-                    <button class="delete-btn" onclick="removeFromCart('${item.id}')">Remove</button>
+                <div style="display:flex; align-items:center; gap: 0.75rem; flex-shrink: 0;">
+                    <div style="display:flex; align-items:center; gap: 0.5rem; background:#f9fafb; border:1px solid #e5e7eb; border-radius: 12px; padding: 0.35rem 0.5rem;">
+                        <button class="qty-btn" onclick="updateCartItemQuantity('${item.id}', -1)" style="width: 34px; height: 34px;">−</button>
+                        <input type="number" min="1" value="${item.qty}" onchange="setCartItemQuantity('${item.id}', this.value)" style="width: 80px; text-align:center; border:none; background:transparent; font-weight:700; font-size: 1.05rem; color:#065f46;">
+                        <button class="qty-btn" onclick="updateCartItemQuantity('${item.id}', 1)" style="width: 34px; height: 34px;">+</button>
+                    </div>
+                    <div style="text-align: right; min-width: 110px; flex-shrink: 0;">
+                        <div style="font-weight: 700; color: #065f46; margin-bottom: 0.25rem; font-size: 1.1rem;">$${(item.price * item.qty).toFixed(2)}</div>
+                        <button class="delete-btn" onclick="removeFromCart('${item.id}')" style="padding: 0.45rem 0.75rem;">🗑️</button>
+                    </div>
                 </div>
             </div>`).join('');
     }
@@ -215,8 +231,57 @@ function showCartItems() {
     document.getElementById('viewCartModal').style.display = 'flex';
 }
 
+function toggleCartItemSelection(itemId, checked) {
+    if (checked) {
+        if (!cartSelectedIds.includes(itemId)) cartSelectedIds.push(itemId);
+    } else {
+        cartSelectedIds = cartSelectedIds.filter(id => id !== itemId);
+    }
+    updateCartSelectionDisplay();
+}
+
+function updateCartSelectionDisplay() {
+    const status = document.getElementById('cartSelectionStatus');
+    if (status) {
+        status.innerText = `${cartSelectedIds.length} selected`;
+    }
+}
+
+function updateCartItemQuantity(itemId, delta) {
+    const item = cart.find(i => i.id === itemId);
+    if (!item) return;
+    item.qty = Math.max(1, item.qty + delta);
+    saveCart();
+    updateCartUI();
+    showCartItems();
+}
+
+function setCartItemQuantity(itemId, value) {
+    const qty = parseInt(value, 10);
+    if (Number.isNaN(qty) || qty < 1) return;
+    const item = cart.find(i => i.id === itemId);
+    if (!item) return;
+    item.qty = qty;
+    saveCart();
+    updateCartUI();
+    showCartItems();
+}
+
+function removeSelectedCartItems() {
+    if (cartSelectedIds.length === 0) {
+        showNotify('Please select one or more items to remove.', 'warning');
+        return;
+    }
+    cart = cart.filter(item => !cartSelectedIds.includes(item.id));
+    cartSelectedIds = [];
+    saveCart();
+    updateCartUI();
+    showCartItems();
+}
+
 function removeFromCart(itemId) {
     cart = cart.filter(i => i.id !== itemId);
+    cartSelectedIds = cartSelectedIds.filter(id => id !== itemId);
     saveCart();
     updateCartUI();
     showCartItems();
@@ -322,12 +387,21 @@ async function processOrder() {
     updateCartUI();
     selectedItems = [];
     closeModal('checkoutModal');
-    showNotify("Order placed successfully!", "success");
+    showNotify("Order placed! Auto-moving to vendor in 30 seconds...", "success");
+    
+    setTimeout(() => {
+        autoMoveToShip(order.id);
+    }, 30000);
     
     setTimeout(() => {
         showTab('purchases');
         loadMyOrders('to-pay');
     }, 1500);
+}
+
+async function autoMoveToShip(orderId) {
+    await supabaseClient.from('orders').update({ status: 'to-ship' }).eq('id', orderId);
+    loadMyOrders('to-pay');
 }
 
 async function loadMyOrders(status) {

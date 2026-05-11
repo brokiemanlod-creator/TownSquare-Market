@@ -85,3 +85,16 @@ async function confirmLogout() {
 
 checkVendor();
 loadVendorInventory();
+
+function showMessages() {
+    document.getElementById('messagesModal').style.display = 'flex';
+    // TODO: Load messages
+}
+
+function sendMessage() {
+    const input = document.getElementById('messageInput');
+    const message = input.value.trim();
+    if (!message) return;
+    // TODO: Send message
+    input.value = '';
+}

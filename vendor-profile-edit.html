@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile | Vendor Dashboard</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='75' font-size='75' font-weight='bold' fill='%23000'>🏪</text></svg>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav>
+        <div class="logo">🏪 Edit Profile</div>
+        <div style="display: flex; gap: 12px; align-items: center;">
+            <button class="btn btn-outline" onclick="window.location.href='vendor.html'">← Back to Dashboard</button>
+            <button class="btn btn-danger" onclick="confirmLogout()">Logout</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div style="max-width: 600px; margin: 0 auto;">
+            <header style="margin-bottom: 2rem;">
+                <h1 style="margin: 0; font-size: 2rem;">👤 Edit Your Profile</h1>
+                <p style="color: #9ca3af; margin: 0.5rem 0 0 0;">Update your shop and personal information</p>
+            </header>
+
+            <form id="profileForm" style="background: white; border: 1px solid #e5e7eb; border-radius: 16px; padding: 2rem;">
+                
+                <!-- Personal Information Section -->
+                <div style="margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 2px solid #e5e7eb;">
+                    <h3 style="margin: 0 0 1.5rem 0; color: #1f2937;">👤 Personal Information</h3>
+                    
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: #374151;">Full Name</label>
+                        <input type="text" id="fullName" class="input" placeholder="Your full name" required>
+                    </div>
+
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: #374151;">Email</label>
+                        <input type="email" id="email" class="input" placeholder="Your email" disabled style="background: #f3f4f6; cursor: not-allowed;">
+                        <small style="color: #9ca3af; display: block; margin-top: 0.25rem;">Email cannot be changed</small>
+                    </div>
+
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: #374151;">Phone Number</label>
+                        <input type="tel" id="phoneNumber" class="input" placeholder="+63 9XX XXX XXXX" required>
+                    </div>
+                </div>
+
+                <!-- Shop Information Section -->
+                <div style="margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 2px solid #e5e7eb;">
+                    <h3 style="margin: 0 0 1.5rem 0; color: #1f2937;">🏪 Shop Information</h3>
+                    
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: #374151;">Shop Name</label>
+                        <input type="text" id="shopName" class="input" placeholder="Your shop name" required>
+                    </div>
+
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: #374151;">Shop Description</label>
+                        <textarea id="shopDescription" class="input" placeholder="Describe your shop, products, and services..." style="height: 120px;"></textarea>
+                    </div>
+
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: #374151;">Shop Address</label>
+                        <input type="text" id="shopAddress" class="input" placeholder="Your shop address" required>
+                    </div>
+                </div>
+
+                <!-- Banking Information Section -->
+                <div style="margin-bottom: 2rem;">
+                    <h3 style="margin: 0 0 1.5rem 0; color: #1f2937;">🏦 Banking Information (Optional)</h3>
+                    
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: #374151;">Bank Account Name</label>
+                        <input type="text" id="bankAccountName" class="input" placeholder="Account holder name">
+                    </div>
+
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: #374151;">Bank Account Number</label>
+                        <input type="text" id="bankAccountNumber" class="input" placeholder="Account number" style="font-family: monospace;">
+                    </div>
+
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: #374151;">Bank Name</label>
+                        <input type="text" id="bankName" class="input" placeholder="e.g., BPI, GCash, PayMaya">
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div style="display: flex; gap: 10px;">
+                    <button type="button" class="btn btn-outline" style="flex: 1;" onclick="window.location.href='vendor.html'">Cancel</button>
+                    <button type="submit" class="btn btn-primary" style="flex: 1;">💾 Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- NOTIFICATION MODAL -->
+    <div id="notifyModal" class="modal-overlay" style="display: none;">
+        <div class="modal" style="max-width: 420px;">
+            <div style="text-align: center; padding: 2rem;">
+                <div id="notifyIcon" style="font-size: 3.5rem; margin-bottom: 1rem;"></div>
+                <h2 id="notifyTitle" style="margin: 0 0 0.5rem 0;"></h2>
+                <p id="notifyMessage" style="color: #6b7280; margin-bottom: 1.5rem;"></p>
+                <button class="btn btn-primary" onclick="closeModal('notifyModal')" style="width: 100%;">Got it</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const SUPABASE_URL = 'https://bsnmcvntzvywhkpjsvsi.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJzbm1jdm50enZ5d2hrcGpzdnNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgxNDc5MzcsImV4cCI6MjA5MzcyMzkzN30.OsHDloa5J7UcbDwP4n8TXFhIkTnAn7INwsR-_ld-ZQ0';
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        async function loadProfile() {
+            const { data: { user } } = await supabaseClient.auth.getUser();
+            if (!user) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            const { data: profile } = await supabaseClient
+                .from('profiles')
+                .select('*')
+                .eq('id', user.id)
+                .single();
+
+            if (profile) {
+                document.getElementById('fullName').value = profile.full_name || '';
+                document.getElementById('email').value = user.email || '';
+                document.getElementById('phoneNumber').value = profile.phone_number || '';
+                document.getElementById('shopName').value = profile.store_name || '';
+                document.getElementById('shopDescription').value = profile.shop_description || '';
+                document.getElementById('shopAddress').value = profile.address || '';
+                document.getElementById('bankAccountName').value = profile.bank_account_name || '';
+                document.getElementById('bankAccountNumber').value = profile.bank_account_number || '';
+                document.getElementById('bankName').value = profile.bank_name || '';
+            }
+        }
+
+        document.getElementById('profileForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const { data: { user } } = await supabaseClient.auth.getUser();
+
+            const { error } = await supabaseClient
+                .from('profiles')
+                .update({
+                    full_name: document.getElementById('fullName').value,
+                    phone_number: document.getElementById('phoneNumber').value,
+                    store_name: document.getElementById('shopName').value,
+                    shop_description: document.getElementById('shopDescription').value,
+                    address: document.getElementById('shopAddress').value,
+                    bank_account_name: document.getElementById('bankAccountName').value,
+                    bank_account_number: document.getElementById('bankAccountNumber').value,
+                    bank_name: document.getElementById('bankName').value
+                })
+                .eq('id', user.id);
+
+            if (error) {
+                showNotify('Error saving profile: ' + error.message, 'error');
+            } else {
+                showNotify('Profile saved successfully!', 'success');
+                setTimeout(() => {
+                    window.location.href = 'vendor.html';
+                }, 2000);
+            }
+        });
+
+        function showNotify(message, type = 'info') {
+            const icons = { info: '🔔', success: '✅', error: '❌', warning: '⚠️' };
+            document.getElementById('notifyIcon').innerText = icons[type];
+            document.getElementById('notifyTitle').innerText = type.toUpperCase();
+            document.getElementById('notifyMessage').innerText = message;
+            document.getElementById('notifyModal').style.display = 'flex';
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+
+        async function confirmLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                await supabaseClient.auth.signOut();
+                window.location.href = 'index.html';
+            }
+        }
+
+        loadProfile();
+    </script>
+</body>
+</html>
