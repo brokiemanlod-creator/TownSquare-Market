@@ -55,7 +55,6 @@ loginBtn.addEventListener('click', async () => {
         const routes = {
             'admin': 'admin.html',
             'vendor': 'vendor.html',
-            'rider': 'rider.html', // New role
             'customer': 'customer.html'
         };
         window.location.href = routes[userRole] || 'customer.html';

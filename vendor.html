@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vendor Dashboard | TownSquare</title>
+    <title>Vendor Dashboard</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='75' font-size='75' font-weight='bold' fill='%23000'>🏪</text></svg>">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -52,21 +52,12 @@
             color: #065f46;
             border-bottom-color: #065f46;
         }
-        .tab-btn:hover {
-            color: #065f46;
-        }
-        .order-item {
+        .order-card {
             background: white;
             border: 1px solid #e5e7eb;
             border-radius: 12px;
             padding: 1.5rem;
             margin-bottom: 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .order-info {
-            flex: 1;
         }
         .product-form {
             background: white;
@@ -97,27 +88,12 @@
             height: 180px;
             object-fit: cover;
         }
-        .product-info {
-            padding: 1rem;
-        }
-        .product-name {
-            font-weight: 600;
-            color: #1f2937;
-            margin-bottom: 0.5rem;
-        }
-        .product-price {
-            color: #065f46;
-            font-weight: 700;
-            font-size: 1.2rem;
-            margin-bottom: 1rem;
-        }
     </style>
 </head>
 <body>
     <nav>
         <div class="logo">🏪 TownSquare Vendor</div>
         <div style="display: flex; gap: 12px; align-items: center;">
-            <button class="btn btn-outline" onclick="showMessages()">💬 Messages</button>
             <button class="btn btn-outline" onclick="window.location.href='vendor-profile-edit.html'">✏️ Edit Profile</button>
             <button class="btn btn-danger" onclick="showLogoutModal()">Logout</button>
         </div>
@@ -147,7 +123,6 @@
         <div class="tab-nav">
             <button class="tab-btn active" onclick="switchTab('inventory', this)">📦 Inventory</button>
             <button class="tab-btn" onclick="switchTab('orders', this)">🛒 Orders</button>
-            <button class="tab-btn" onclick="switchTab('reviews', this)">⭐ Reviews</button>
         </div>
 
         <!-- INVENTORY TAB -->
@@ -174,12 +149,14 @@
 
         <!-- ORDERS TAB -->
         <div id="ordersTab" style="display: none;">
+            <div style="margin-bottom: 1.5rem;">
+                <div class="tab-nav" style="border-bottom: none; margin-bottom: 1rem;">
+                    <button class="tab-btn active" id="pendingBtn" onclick="filterOrders('pending', this)">⏳ Pending</button>
+                    <button class="tab-btn" id="rejectedBtn" onclick="filterOrders('rejected', this)">❌ Rejected</button>
+                    <button class="tab-btn" id="completedBtn" onclick="filterOrders('completed', this)">✅ Completed</button>
+                </div>
+            </div>
             <div id="vendorOrders"></div>
-        </div>
-
-        <!-- REVIEWS TAB -->
-        <div id="reviewsTab" style="display: none;">
-            <div id="reviewSection"></div>
         </div>
     </div>
 
@@ -198,21 +175,14 @@
         </div>
     </div>
 
-    <!-- MESSAGES MODAL -->
-    <div id="messagesModal" class="modal-overlay" style="display: none;">
-        <div class="modal" style="max-width: 600px; max-height: 80vh;">
-            <div style="padding: 2rem;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
-                    <h2 style="margin: 0;"><i class="fas fa-comments"></i> Messages</h2>
-                    <button onclick="closeModal('messagesModal')" style="background:none; border:none; font-size:1.8rem; cursor:pointer; color: #6b7280;">&times;</button>
-                </div>
-                <div id="messagesList" style="max-height: 400px; overflow-y: auto;">
-                    <!-- Messages will be loaded here -->
-                </div>
-                <div style="margin-top: 1rem;">
-                    <input type="text" id="messageInput" placeholder="Type your message..." style="width: 100%; padding: 0.75rem; border: 1px solid #e5e7eb; border-radius: 8px;">
-                    <button class="btn btn-primary" style="margin-top: 0.5rem;" onclick="sendMessage()">Send</button>
-                </div>
+    <!-- NOTIFY MODAL -->
+    <div id="notifyModal" class="modal-overlay" style="display:none;">
+        <div class="modal" style="max-width:420px;">
+            <div style="text-align:center; padding:2rem;">
+                <div id="notifyIcon" style="font-size:3.5rem; margin-bottom:1rem;"></div>
+                <h2 id="notifyTitle"></h2>
+                <p id="notifyMessage" style="color:#6b7280;"></p>
+                <button class="btn btn-primary" onclick="closeModal('notifyModal')">Got it</button>
             </div>
         </div>
     </div>
